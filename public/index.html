@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NANDA Index - Autonomous Agent Registry</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
+            background: #ffffff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        .header {
+            background: #ffffff;
+            border-bottom: 1px solid #e1e4e8;
+            padding: 20px 0;
+            margin-bottom: 40px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .logo-section {
+            flex: 1;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 600;
+            color: #24292f;
+            margin-bottom: 4px;
+        }
+        
+        .tagline {
+            color: #656d76;
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+        
+        .subtitle {
+            color: #8b949e;
+            font-size: 14px;
+        }
+        
+        .auth-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            background: #f6f8fa;
+            color: #24292f;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn:hover {
+            background: #f3f4f6;
+            border-color: #d0d7de;
+        }
+        
+        .btn-primary {
+            background: #2da44e;
+            color: white;
+            border-color: #2da44e;
+        }
+        
+        .btn-primary:hover {
+            background: #2c974b;
+            border-color: #2c974b;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+        }
+        
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+        
+        .user-name {
+            font-size: 14px;
+            color: #24292f;
+            font-weight: 500;
+        }
+        
+        /* Instructions */
+        .instructions {
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .instructions h3 {
+            color: #24292f;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .instructions ol {
+            margin-left: 24px;
+            color: #656d76;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .instructions strong {
+            color: #24292f;
+        }
+        
+        .instructions p {
+            margin-top: 16px;
+            color: #656d76;
+        }
+        
+        /* Stats */
+        .stats {
+            background: #ffffff;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            text-align: center;
+            color: #656d76;
+            font-size: 14px;
+        }
+        
+        /* Agent Grid */
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+        
+        .agent-card {
+            background: #ffffff;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 16px;
+            transition: box-shadow 0.15s ease;
+            position: relative;
+        }
+        
+        .agent-card:hover {
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .agent-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .agent-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #24292f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+            margin-right: 12px;
+        }
+        
+        .agent-info {
+            flex: 1;
+        }
+        
+        .agent-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #24292f;
+            margin-bottom: 2px;
+        }
+        
+        .agent-id {
+            font-size: 12px;
+            color: #8b949e;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+        }
+        
+        .agent-link {
+            color: #0969da;
+            text-decoration: none;
+            font-size: 14px;
+            margin-top: 8px;
+            display: inline-block;
+        }
+        
+        .agent-link:hover {
+            text-decoration: underline;
+        }
+        
+        .agent-date {
+            color: #8b949e;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+        
+        .agent-actions {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: none;
+            gap: 4px;
+        }
+        
+        .agent-card:hover .agent-actions {
+            display: flex;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: #656d76;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+        
+        .action-btn:hover {
+            background: #f3f4f6;
+            color: #24292f;
+        }
+        
+        .action-btn.delete:hover {
+            background: #ffebe9;
+            color: #cf222e;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 0;
+            border-radius: 6px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+        }
+        
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #d0d7de;
+        }
+        
+        .modal-header h2 {
+            color: #24292f;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .modal-body {
+            padding: 20px 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #24292f;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.15s ease;
+            background: #ffffff;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #0969da;
+            box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
+        }
+        
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #d0d7de;
+            background: #f6f8fa;
+            border-radius: 0 0 6px 6px;
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+        
+        /* Messages */
+        .message {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+        
+        .message.success {
+            background: #dafbe1;
+            border: 1px solid #2da44e;
+            color: #1a7f37;
+        }
+        
+        .message.error {
+            background: #ffebe9;
+            border: 1px solid #cf222e;
+            color: #cf222e;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 16px;
+            color: #656d76;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .auth-section {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            
+            .agent-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                margin: 5% auto;
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">NANDA INDEX</div>
+                    <div class="tagline">Autonomous Agent Registry</div>
+                    <div class="subtitle">Open registry for discovering and managing autonomous agents</div>
+                </div>
+                
+                <div class="auth-section">
+                    <div id="user-info" style="display: none;"></div>
+                    <a href="/auth/google" id="login-btn" class="btn" style="display: none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Sign in with Google
+                    </a>
+                    <button id="add-agent-btn" class="btn btn-primary" style="display: none;">Add Agent</button>
+                    <a href="/auth/logout" id="logout-btn" class="btn" style="display: none;">Sign out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="instructions">
+            <h3>How to Register Your Agent</h3>
+            <ol>
+                <li><strong>Authenticate</strong> - Sign in with your Google account</li>
+                <li><strong>Add Agent</strong> - Click "Add Agent" to open the registration form</li>
+                <li><strong>Username</strong> - Enter a unique identifier for your agent</li>
+                <li><strong>Agent Facts</strong> - Provide the URL to your agent's JSON facts file</li>
+                <li><strong>Submit</strong> - Your agent will be added to the public registry</li>
+            </ol>
+            <p><strong>Note:</strong> You can only modify agents that you have registered.</p>
+        </div>
+
+        <div id="stats" class="stats" style="display: none;"></div>
+        
+        <div id="content">
+            <div class="loading">Loading agents...</div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="agent-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add Agent</h2>
+            </div>
+            <div class="modal-body">
+                <form id="agent-form">
+                    <div class="form-group">
+                        <label for="username">Agent Username</label>
+                        <input type="text" id="username" name="username" required placeholder="e.g., maria, johnsmith">
+                    </div>
+                    <div class="form-group">
+                        <label for="agent_facts_link">Agent Facts URL</label>
+                        <input type="url" id="agent_facts_link" name="agent_facts_link" required 
+                               placeholder="https://agentfacts.projectnanda.org/yourname.json">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+                <button type="submit" form="agent-form" class="btn btn-primary" id="submit-btn">Add Agent</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let editingAgentId = null;
+
+        async function init() {
+            await loadUser();
+            await loadAgents();
+        }
+
+        async function loadUser() {
+            try {
+                const response = await fetch('/api/user');
+                const user = await response.json();
+                
+                if (user) {
+                    currentUser = user;
+                    document.getElementById('user-info').innerHTML = `
+                        <div class="user-info">
+                            <img src="${user.picture}" alt="${user.name}" class="user-avatar">
+                            <span class="user-name">${user.name}</span>
+                        </div>
+                    `;
+                    document.getElementById('user-info').style.display = 'block';
+                    document.getElementById('add-agent-btn').style.display = 'inline-flex';
+                    document.getElementById('logout-btn').style.display = 'inline-flex';
+                    document.getElementById('login-btn').style.display = 'none';
+                } else {
+                    document.getElementById('user-info').style.display = 'none';
+                    document.getElementById('add-agent-btn').style.display = 'none';
+                    document.getElementById('logout-btn').style.display = 'none';
+                    document.getElementById('login-btn').style.display = 'inline-flex';
+                }
+            } catch (error) {
+                console.error('Error loading user:', error);
+            }
+        }
+
+        async function loadAgents() {
+            try {
+                const response = await fetch('/api/agents');
+                const agents = await response.json();
+                displayAgents(agents);
+            } catch (error) {
+                document.getElementById('content').innerHTML = 
+                    `<div class="message error">Error loading agents: ${error.message}</div>`;
+            }
+        }
+
+        function displayAgents(agents) {
+            const content = document.getElementById('content');
+            const stats = document.getElementById('stats');
+            
+            if (agents.length === 0) {
+                content.innerHTML = '<div class="loading">No agents registered. Be the first to add one!</div>';
+                return;
+            }
+
+            stats.style.display = 'block';
+            stats.innerHTML = `${agents.length} agents registered`;
+
+            const cardsHtml = agents.map(agent => {
+                const username = agent.username || 'Anonymous';
+                const initials = username.substring(0, 2).toUpperCase();
+                const createdDate = new Date(agent.created_at).toLocaleDateString();
+                const agentId = agent.source_agent_id ? agent.source_agent_id.substring(0, 12) + '...' : 'Unknown';
+                const factsLink = agent.agent_facts_link || '#';
+                const isOwner = currentUser && agent.source_user_id === currentUser.id;
+                
+                return `
+                    <div class="agent-card">
+                        ${isOwner ? `
+                            <div class="agent-actions">
+                                <button class="action-btn" onclick="editAgent('${agent._id}', '${username}', '${factsLink}')" title="Edit">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                                    </svg>
+                                </button>
+                                <button class="action-btn delete" onclick="deleteAgent('${agent._id}', '${username}')" title="Delete">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        ` : ''}
+                        <div class="agent-header">
+                            <div class="agent-avatar">${initials}</div>
+                            <div class="agent-info">
+                                <div class="agent-name">${username}</div>
+                                <div class="agent-id">${agentId}</div>
+                            </div>
+                        </div>
+                        ${factsLink !== '#' ? `<a href="${factsLink}" target="_blank" class="agent-link">View Facts →</a>` : ''}
+                        <div class="agent-date">Registered ${createdDate}</div>
+                    </div>
+                `;
+            }).join('');
+
+            content.innerHTML = `<div class="agent-grid">${cardsHtml}</div>`;
+        }
+
+        function openModal(title = 'Add Agent', submitText = 'Add Agent') {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('submit-btn').textContent = submitText;
+            document.getElementById('agent-modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('agent-modal').style.display = 'none';
+            document.getElementById('agent-form').reset();
+            editingAgentId = null;
+        }
+
+        function editAgent(id, username, factsLink) {
+            editingAgentId = id;
+            document.getElementById('username').value = username;
+            document.getElementById('agent_facts_link').value = factsLink;
+            openModal('Edit Agent', 'Update Agent');
+        }
+
+        async function deleteAgent(id, username) {
+            if (!confirm(`Delete agent "${username}"?`)) return;
+
+            try {
+                const response = await fetch(`/api/agents/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    showMessage('Agent deleted successfully', 'success');
+                    loadAgents();
+                } else {
+                    const error = await response.json();
+                    showMessage(error.error || 'Failed to delete agent', 'error');
+                }
+            } catch (error) {
+                showMessage('Failed to delete agent', 'error');
+            }
+        }
+
+        document.getElementById('add-agent-btn').addEventListener('click', () => {
+            if (!currentUser) {
+                alert('Please sign in to add an agent');
+                return;
+            }
+            openModal();
+        });
+
+        document.getElementById('agent-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                alert('Please sign in first');
+                return;
+            }
+
+            const formData = new FormData(e.target);
+            const data = {
+                username: formData.get('username'),
+                agent_facts_link: formData.get('agent_facts_link')
+            };
+
+            try {
+                const url = editingAgentId ? `/api/agents/${editingAgentId}` : '/api/agents';
+                const method = editingAgentId ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    const message = editingAgentId ? 'Agent updated successfully' : 'Agent added successfully';
+                    showMessage(message, 'success');
+                    closeModal();
+                    loadAgents();
+                } else {
+                    const error = await response.json();
+                    showMessage(error.error || 'Failed to save agent', 'error');
+                }
+            } catch (error) {
+                showMessage('Failed to save agent', 'error');
+            }
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('agent-modal')) {
+                closeModal();
+            }
+        });
+
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            
+            const container = document.querySelector('.container');
+            container.insertBefore(messageDiv, container.firstChild);
+            
+            setTimeout(() => messageDiv.remove(), 5000);
+        }
+
+        init();
+        setInterval(loadAgents, 30000);
+    </script>
+</body>
+</html> 
